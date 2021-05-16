@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:typed_data';
 import 'package:delayed_display/delayed_display.dart';
+import 'widgets.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,8 +27,9 @@ class MyApp extends StatelessWidget {
         fontFamily: "Moto",
         brightness: Brightness.light,
         accentColor: Colors.purple[40],
-        backgroundColor: Colors.grey[40],
-        scaffoldBackgroundColor: Colors.grey[40],
+        backgroundColor: Colors.blueGrey[100],
+        scaffoldBackgroundColor: Colors.grey[100],
+        cardColor: Colors.blueGrey[120],
         // This is the theme of your application.
         //
         // Try running your application with "flutter run". You'll see the
@@ -76,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    final TextStyle headline2 = Theme.of(context).textTheme.headline6!;
+    //final TextStyle headline2 = Theme.of(context).textTheme.headline6!;
     firebase_storage.FirebaseStorage storage = firebase_storage.FirebaseStorage.instance;
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     if(litems.length == 0){
@@ -92,16 +94,10 @@ class _MyHomePageState extends State<MyHomePage> {
             // for(var i = 0; i < doc['ingredients'].length; i++){
             //   print("Ingredient $i == ${doc['ingredient'][i]}");
             // }
-            // EVENING END : Trying to access data in the above line of code so that I can print out
-            // The Individual Ingredients.
             //item, measure, prep, quant, step
           }) //For Each
         });//
     }
-    //ListStorageItems();
-    //GetRecipeNames('recipes', firestore);
-    //final mainReference = storage.ref('recipes');
-    //Future <dynamic> recipes = mainReference.listAll();
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -110,6 +106,13 @@ class _MyHomePageState extends State<MyHomePage> {
           child : Text(widget.title), 
         ),
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: 0,
+        items: [
+          BottomNavigationBarItem(icon: new Icon(Icons.home), label: 'Home',),
+          BottomNavigationBarItem(icon: new Icon(Icons.pages), label: 'Favorites'),
+          BottomNavigationBarItem(icon: new Icon(Icons.search), label: 'Search'),
+        ],),
       body:
         new ListView.builder (
           itemCount : litems.length,
@@ -132,7 +135,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         print("Click event on Container. ${litems[index]}");
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => RecipeCard(DocHolder[index], storage)),
+                          MaterialPageRoute(builder: (context) => RecipeCard(DocHolder[index], storage, DocHolder[index]['ingredients'].length)),
                         );
                       }
                     )]))
@@ -141,75 +144,3 @@ class _MyHomePageState extends State<MyHomePage> {
       );
   } //Build Widget
 } //Homepage
-
-class RecipeCard extends StatelessWidget {
-  final QueryDocumentSnapshot RecipeDoc;
-  final firebase_storage.FirebaseStorage storage;
-
-  RecipeCard(this.RecipeDoc, this.storage);
-
-  //Map<String, dynamic> ingList = RecipeDoc['ingredients'].map();
-  List<String> test_list = ["thing1", "thing2", "thing3", "thing4", "thing5"];
-  
-  @override
-  Widget build(BuildContext context) {
-    return Container (
-      color: Colors.purple[50],
-      child : Scaffold(
-        appBar: AppBar(
-          title: Text(
-            RecipeDoc['rec_title'].toString()
-            ),
-          ),
-          body: Column(
-              children: <Widget>[
-                Container(
-                  child: Center(
-                      child: new Image.asset(
-                      'assets/${RecipeDoc['image'].toString()}',
-                    ),
-                  ),
-                ),
-                Text('Ingredients : ',
-                  style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 40,
-                  shadows: <Shadow>[ 
-                    Shadow(
-                      offset: Offset(2.0, 2.0),
-                      blurRadius: 4.0,
-                      color: Color.alphaBlend(Colors.grey, Colors.transparent)
-                    )]
-                  )
-                ),
-                Divider(
-                  color: Colors.deepPurple,
-                ),
-                ListView.builder(
-                  //scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemCount: test_list.length,
-                  itemBuilder: (BuildContext context, int index){
-                    return Card(
-                      color: Colors.blueGrey[50],
-                      child: Text(RecipeDoc['ingredients'][index]['item']),
-                      //child: Text(test_list[index]),
-                    );
-                  },
-                )
-              ]
-            )
-          ),
-      //)
-    );
-  }
-}
-
-
-// class RecipeList extends StatelessWidget {
-
-//   final 
-
-//   RecipeList()
-//   @override
-// }
