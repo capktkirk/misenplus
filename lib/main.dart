@@ -91,6 +91,9 @@ class _MyHomePageState extends State<MyHomePage> {
             litems.add(doc['rec_title'].toString());
             print(doc['ingredients']);
             print("This is ${doc['ingredients'][0]}");
+            print("This is printing out the timer\n");
+            print(doc['cook_time']['step1']);
+            print(doc['cook_time']['step1']['timer']);
             // for(var i = 0; i < doc['ingredients'].length; i++){
             //   print("Ingredient $i == ${doc['ingredient'][i]}");
             // }

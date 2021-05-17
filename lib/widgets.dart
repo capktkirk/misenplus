@@ -5,22 +5,28 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:typed_data';
 import 'package:delayed_display/delayed_display.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 
 class RecipeCard extends StatelessWidget {
   final QueryDocumentSnapshot recipeDoc;
   final firebase_storage.FirebaseStorage storage;
   final int IngLength;
-
   RecipeCard(this.recipeDoc, this.storage, this.IngLength);
   
+  final int stepNum = 1;
   @override
   Widget build(BuildContext context) {
     return Container (
       color: Colors.purple[50],
       child : Scaffold(
         floatingActionButton: FloatingActionButton.extended(
-          onPressed: (){}, 
+          onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Steps(recipeDoc, stepNum)),
+              );
+          }, 
           label: const Text('Let\'s cook!'),
           icon: const Icon(Icons.timer),
         ),
@@ -94,4 +100,36 @@ class RecipeCard extends StatelessWidget {
       //)
     );
   }
+}
+
+class Steps extends StatelessWidget {
+  final QueryDocumentSnapshot recipeDoc;
+  final int stepNum;
+  Steps(this.recipeDoc, this.stepNum);
+  @override
+  Widget build(BuildContext context){
+    return Container(
+      color: Colors.purple[50],
+      child : Scaffold(
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () => { },
+          label: const Text('Next Step'),
+          icon: const Icon(Icons.timer),
+        ),
+        appBar: AppBar(
+          title: Text(
+            recipeDoc['rec_title'].toString() + " - step " + stepNum.toString()
+          ),
+        )
+      )
+    );
+  }
+}
+
+String timerCheck(QueryDocumentSnapshot doc, int step){
+  String text = "false";
+  if(true){
+    text = "true";
+  }
+  return text;
 }
