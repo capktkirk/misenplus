@@ -1,9 +1,7 @@
-import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:simple_animations/simple_animations.dart';
-import 'package:supercharged/supercharged.dart';
+import 'timer_widgets.dart';
 
 class StepIngredients extends StatelessWidget{
   final QueryDocumentSnapshot doc;
@@ -55,63 +53,13 @@ class StepIngredients extends StatelessWidget{
   }
 }
 
-class StepTimerPicker extends StatelessWidget {
-  final QueryDocumentSnapshot doc;
-  final int step;
-  final String flag;
-  StepTimerPicker(this.doc, this.step, this.flag);
-  @override
-  Widget build(BuildContext context){
-    if(flag == "Start Timer"){ //Flag 1 means a timer is present.
-      return Container(
-        color: Colors.purple[50],
-        child : Scaffold(
-          floatingActionButton: FloatingActionButton.extended(
-            onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => StepTimerPicker(doc, step, timerCheck(doc, step))),
-                );
-            },
-            label: Text(timerCheck(doc, step)),
-            icon: const Icon(Icons.timer),
-          ),
-          appBar: AppBar(
-            title: Text(
-              doc['rec_title'].toString() + "Timer Partition"
-            ),
-          ),
-          body: Column(children: [
-            StepIngredients(doc, step, stepList(doc, step)),
-            TimerAnimation(doc, step)
-          ]),
-        )
-      );
-    }
-    else{
-    return Container(
-      color: Colors.purple[50],
-      child : Scaffold(
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => StepTimerPicker(doc, step+1, timerCheck(doc, step))),
-              );
-          },
-          label: Text(timerCheck(doc, step)),
-          icon: const Icon(Icons.timer),
-        ),
-        appBar: AppBar(
-          title: Text(
-            doc['rec_title'].toString()
-          ),
-        ),
-        body: StepIngredients(doc, step, stepList(doc, step)),
-      )
-    );
-    }
+String timerCheck(QueryDocumentSnapshot doc, int step){
+  String text = "step" + step.toString();
+  String ret_str = "Next Step!";
+  if(doc['cook_time'][text]['timer'] > 0){
+    ret_str = "Start Timer";
   }
+  return ret_str;
 }
 
 class RecipeCard extends StatelessWidget {
@@ -238,6 +186,8 @@ class Steps extends StatelessWidget {
   }
 }
 
+
+
 class Step extends StatelessWidget {
   final QueryDocumentSnapshot recipeDoc;
   final int stepNum;
@@ -268,14 +218,6 @@ class Step extends StatelessWidget {
   }
 }
 
-String timerCheck(QueryDocumentSnapshot doc, int step){
-  String text = "step" + step.toString();
-  String ret_str = "Next Step!";
-  if(doc['cook_time'][text]['timer'] > 0){
-    ret_str = "Start Timer";
-  }
-  return ret_str;
-}
 
 List stepList(QueryDocumentSnapshot doc, int step){
   List stepIng = [];
@@ -285,50 +227,4 @@ List stepList(QueryDocumentSnapshot doc, int step){
     }
   }
   return stepIng;
-}
-
-class TimerAnimation extends StatelessWidget{
-  final QueryDocumentSnapshot doc;
-  final int step;
-  TimerAnimation(this.doc, this.step);
-  Widget build(BuildContext context){
-    return HourGlass(doc['cook_time']['step'+step.toString()]['timer']);
-  }
-}
-
-int getTime(QueryDocumentSnapshot doc, int step){
-  return doc['cook_time']['step'+step.toString()]['timer'];
-}
-
-class HourGlass extends StatelessWidget{
-  final int time;
-  HourGlass(this.time);
-  Widget build(BuildContext context){
-    return Container(
-      child: Column(
-        children: [
-          PlayAnimation<Color?>(
-            duration: Duration(seconds: 15),
-            tween: ColorTween(begin:Colors.deepPurple, end: Colors.white),
-            builder: (context, child, value){
-              return Container(
-                color: value,
-                width: 100,
-                height: 100,
-              );
-            }
-          ),
-          PlayAnimation<Color?>(
-            duration: Duration(seconds: 15),
-            tween: ColorTween(begin:Colors.white, end: Colors.deepPurple),
-            builder: (context, child, value){
-              return Container(
-                color: value,
-                width: 100,
-                height: 100,
-              );
-            }
-          )
-    ],));
-  }
 }
