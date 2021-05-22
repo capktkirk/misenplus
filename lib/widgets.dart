@@ -35,7 +35,7 @@ class StepIngredients extends StatelessWidget{
                       child: Icon(Icons.arrow_right_rounded, size:12.0),
                     ),
                     WidgetSpan(
-                      child: Text("${tempList[index]['quant']} ${tempList[index]['measure']}'s of ${tempList[index]['prep']} ${tempList[index]['item']}",
+                      child: Text("${tempList[index]['quant']} ${tempList[index]['measure']}s of ${tempList[index]['prep']}${tempList[index]['item']}",
                       style: TextStyle(fontSize:18.0),
                       textAlign: TextAlign.center)),
                   ])
