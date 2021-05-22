@@ -3,7 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dart:typed_data';
 import 'package:delayed_display/delayed_display.dart';
 import 'widgets.dart';
 
@@ -85,15 +84,16 @@ class _MyHomePageState extends State<MyHomePage> {
         firestore.collection('recipes').get().then( (QuerySnapshot querySnapshot) => {
           querySnapshot.docs.forEach( (doc) 
           {
-            print('This has triggered a list print.');
-            print(doc['rec_title']);
+            //commented out sections are for test printing.
+            //print('This has triggered a list print.');
+            //print(doc['rec_title']);
             DocHolder.add(doc);
             litems.add(doc['rec_title'].toString());
-            print(doc['ingredients']);
-            print("This is ${doc['ingredients'][0]}");
-            print("This is printing out the timer\n");
-            print(doc['cook_time']['step1']);
-            print(doc['cook_time']['step1']['timer']);
+            //print(doc['ingredients']);
+            //print("This is ${doc['ingredients'][0]}");
+            //print("This is printing out the timer\n");
+            //print("Step 1 : " + doc['cook_time']['step1'].toString());
+            //print("Time ${doc['cook_time']['step1']['timer']}");
             // for(var i = 0; i < doc['ingredients'].length; i++){
             //   print("Ingredient $i == ${doc['ingredient'][i]}");
             // }
