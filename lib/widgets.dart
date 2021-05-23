@@ -9,6 +9,15 @@ class StepIngredients extends StatelessWidget{
   final List tempList;
   StepIngredients(this.doc, this.step, this.tempList);
   Widget build(BuildContext context){
+    if(step > doc['cook_time'].length){
+      return Container(
+        color: Colors.deepPurple[400],
+        margin: EdgeInsets.all(100.0),
+        child: Column(children: [
+          Text("Testing This Shiz")
+        ],)
+      );
+    }
     return SingleChildScrollView(
     child: Column(
       children: <Widget>[
@@ -56,7 +65,10 @@ class StepIngredients extends StatelessWidget{
 String timerCheck(QueryDocumentSnapshot doc, int step){
   String text = "step" + step.toString();
   String ret_str = "Next Step!";
-  if(doc['cook_time'][text]['timer'] > 0){
+  if(step >= doc['cook_time'].length){
+    ret_str = "Finish!";
+  }
+  else if(doc['cook_time'][text]['timer'] > 0){
     ret_str = "Start Timer";
   }
   return ret_str;
@@ -76,9 +88,12 @@ class RecipeCard extends StatelessWidget {
       child : Scaffold(
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
+            if(timerCheck(recipeDoc, stepNum) == "Finish!"){
+              Navigator.popUntil(context, ModalRoute.withName('/'));
+            }
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Steps(recipeDoc, stepNum)),
+                MaterialPageRoute(builder: (context) => Step(recipeDoc, stepNum)),
               );
           }, 
           label: const Text('Let\'s cook!'),
@@ -167,10 +182,15 @@ class Steps extends StatelessWidget {
       child : Scaffold(
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
+            if(timerCheck(recipeDoc, stepNum) == "Finish!"){
+              Navigator.popUntil(context, ModalRoute.withName('/'));
+            }
+            else{
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => StepTimerPicker(recipeDoc, stepNum+1, timerCheck(recipeDoc, stepNum))),
-              );
+            );
+            }
           },
           label: Text(timerCheck(recipeDoc, stepNum)),
           icon: const Icon(Icons.timer),
@@ -186,8 +206,6 @@ class Steps extends StatelessWidget {
   }
 }
 
-
-
 class Step extends StatelessWidget {
   final QueryDocumentSnapshot recipeDoc;
   final int stepNum;
@@ -199,9 +217,12 @@ class Step extends StatelessWidget {
       child : Scaffold(
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
+            if(timerCheck(recipeDoc, stepNum) == "Finish!"){
+              Navigator.popUntil(context, ModalRoute.withName('/'));
+            }
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Step(recipeDoc, stepNum+1)),
+                MaterialPageRoute(builder: (context) => Steps(recipeDoc, stepNum+1)),
               );
           },
           label: Text(timerCheck(recipeDoc, stepNum)),
@@ -217,7 +238,6 @@ class Step extends StatelessWidget {
     );
   }
 }
-
 
 List stepList(QueryDocumentSnapshot doc, int step){
   List stepIng = [];

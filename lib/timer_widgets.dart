@@ -13,7 +13,6 @@ class TimerStepIngredients extends StatelessWidget{
     return SingleChildScrollView(
     child: Column(
       children: <Widget>[
-        Divider(color: Colors.deepPurple),
         Text("\n${doc['cook_time']['step${step-1}']['inst']}\n", textAlign: TextAlign.center, style: TextStyle(fontSize:20.0)),
         Card(
           child: ConstrainedBox(
@@ -82,7 +81,7 @@ class StepTimerPicker extends StatelessWidget {
           ),
           appBar: AppBar(
             title: Text(
-              doc['rec_title'].toString() + "Timer = " + doc['cook_time']['step'+ (step-1).toString()]['timer'].toString()
+              doc['rec_title'].toString() + "Timer"
             ),
           ),
           body: Column(children: [
@@ -98,10 +97,14 @@ class StepTimerPicker extends StatelessWidget {
       child : Scaffold(
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
+            if(timerCheck(doc, step) == "Finish!"){
+              Navigator.popUntil(context, ModalRoute.withName('/'));
+            }
+            else{
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => StepTimerPicker(doc, step+1, timerCheck(doc, step))),
-              );
+              );}
           },
           label: Text(timerCheck(doc, step)),
           icon: const Icon(Icons.timer),
@@ -218,10 +221,6 @@ class HourGlass extends StatelessWidget{
                       size: Size(100, 100),
                       painter: DrawHourGlassTop(Paint(), value as Color)
                     ),
-                    // padding: EdgeInsets.all(5.0),
-                    // color: value,
-                    // width: 100,
-                    // height: 100,
                   );
                 }
               ),
@@ -234,10 +233,6 @@ class HourGlass extends StatelessWidget{
                       size: Size(100, 100),
                       painter: DrawHourGlassBot(Paint(), value as Color)
                     )
-                    // padding: EdgeInsets.all(5.0),
-                    // color: value,
-                    // width: 100,
-                    // height: 100,
                   );
                 }
               )
@@ -289,36 +284,3 @@ class DrawHourGlassBot extends CustomPainter{
     return false;
   }
 }
-
-
-// CustomPaint(
-// size: Size(200, 200),
-// painter: DrawTriangle()
-// ),
-// ),
-// ),
-// ),
-// );
-// }
-// }
-// class DrawTriangle extends CustomPainter {
-// Paint _paint;
-// DrawTriangle() {
-// _paint = Paint()
-// ..color = Colors.green
-// ..style = PaintingStyle.fill;
-// }
-// @override
-// void paint(Canvas canvas, Size size) {
-// var path = Path();
-// path.moveTo(size.width/2, 0);
-// path.lineTo(0, size.height);
-// path.lineTo(size.height, size.width);
-// path.close();
-// canvas.drawPath(path, _paint);
-// }
-// @override
-// bool shouldRepaint(CustomPainter oldDelegate) {
-// return false;
-// }
-// }
